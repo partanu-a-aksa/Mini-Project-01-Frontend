@@ -1,39 +1,38 @@
 "use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import * as React from "react";
 import { useState } from "react";
 import api from "@/app/lib/api";
-import axios from "axios";
+import { AxiosError } from "axios";
 
-export default function LogIn() {
+export default function Signup() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [roles, setRoles] = useState("ATTENDDEE");
   const [message, setMessage] = useState("");
 
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSignup() {
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", {
+      const res = await api.post("/auth/signup", {
+        fullName: name,
         email,
         password,
+        roles: roles.toUpperCase(),
       });
+      setMessage(res.data.message);
+      alert("Success!");
 
-      setMessage("Login Succesful.");
-      alert("Welcome!");
-
-      if (res.data.role === "ORGANIZER") {
+      if (res.data.roles === "ORGANIZER") {
         router.replace("/dashboard");
       } else {
         router.replace("/");
       }
     } catch (error: any) {
-      if (error.response) {
-        setMessage(error.response?.data.message || "Login Failed");
-      } else {
-        setMessage("Network Error.");
-      }
+      setMessage(error.res?.data?.message || "Registration Failed.");
     }
   }
 
@@ -65,49 +64,58 @@ export default function LogIn() {
 
           <div className="h-10 w-[2px] bg-black rounded-full opacity-80"></div>
 
-          <h2 className="text-2xl font-extrabold text-slate-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] ">
-            Sign In
+          <h2 className="text-[22px] font-extrabold text-purple-400 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+            Sign Up
           </h2>
         </div>
 
         <form
-          onSubmit={handleLogin}
           className="w-full flex flex-col gap-4 z-10"
+          onSubmit={handleSignup}
         >
           <input
+            type="text"
+            placeholder="Your Fullname"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate-800 placeholder-violet-400 
+              focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
+          />
+          <input
             type="email"
-            placeholder="email@email.com"
+            placeholder="Your Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-gray-300 
-              focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
+            className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-violet-400 focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
           />
           <input
             type="password"
-            placeholder="password"
+            placeholder="Your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-gray-300 
+            className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-violet-400 
               focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
           />
+          <div>
+            <label className="block mb-1 text-gray-700">Role</label>
+            <select
+              value={roles}
+              onChange={(e) => setRoles(e.target.value)}
+              className="w-full p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-violet-400 
+              focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
+            >
+              <option value="ATTENDEE">Attendee</option>
+              <option value="ORGANIZER">Organizer</option>
+            </select>
+          </div>
           <button
             type="submit"
             className="p-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate font-semibold shadow-lg 
               hover:from-cyan-300 hover:to-blue-400 hover:scale-[1.03] transition-all duration-200"
           >
-            Sign In
+            Sign Up
           </button>
         </form>
-
-        {message && (
-          <p
-            className={`text-sm mt-4 ${
-              message.includes("Success") ? "text-green-400" : "text-red-400"
-            }`}
-          >
-            {message}
-          </p>
-        )}
 
         <div className="flex items-center w-full my-4 z-10">
           <hr className="flex-grow border-white/20" />
@@ -128,16 +136,6 @@ export default function LogIn() {
           />
           <span className="font-medium">Sign in with Google</span>
         </button>
-
-        <p className="text-sm text-gray-200 mt-6 z-10">
-          Dont have an account?{" "}
-          <Link
-            href="/auth/signup"
-            className="text-cyan-300 font-semibold hover:underline"
-          >
-            Sign Up
-          </Link>
-        </p>
       </div>
     </div>
   );

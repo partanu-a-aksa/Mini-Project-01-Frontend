@@ -1,3 +1,5 @@
+import Footer from "@/components/layout/Footer";
+
 export interface IMainLayoutProps {
   children: React.ReactNode;
 }
@@ -7,7 +9,7 @@ export default function MainLayout(props: IMainLayoutProps) {
     <>
       {/* <Navbar /> */}
       <main>{props.children}</main>
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }
