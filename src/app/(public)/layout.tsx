@@ -1,4 +1,5 @@
 import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 
 export interface IMainLayoutProps {
   children: React.ReactNode;
@@ -7,7 +8,7 @@ export interface IMainLayoutProps {
 export default function MainLayout(props: IMainLayoutProps) {
   return (
     <>
-      {/* <Navbar /> */}
+      <Header />
       <main>{props.children}</main>
       <Footer />
     </>

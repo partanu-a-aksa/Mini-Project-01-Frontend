@@ -1,29 +1,107 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Home, Calendar, Settings, LogOut, BookUser } from "lucide-react";
+import {
+  Home,
+  Calendar,
+  Settings,
+  LogOut,
+  BookUser,
+  Loader2,
+  PlusCircle,
+  Receipt,
+} from "lucide-react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
 export default function DashboardSidebar() {
   const router = useRouter();
+  const [role, setRole] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function fetchUser() {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+        {
+          withCredentials: true,
+        }
+      );
+      setRole(res.data.user.role);
+    } catch (err) {
+      console.error(err);
+      setRole("");
+    }
+  }
+
+  async function handleSwitchRole() {
+    setLoading(true);
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/switch-role`,
+        {},
+        { withCredentials: true }
+      );
+      const me = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+        {
+          withCredentials: true,
+        }
+      );
+      setRole(me.data.user.role);
+
+      router.replace("/");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to switch profile.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   async function handleLogout() {
     try {
       await axios.post(
-        "http://localhost:5000/auth/logout",
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
         {},
         {
           withCredentials: true,
         }
       );
+      localStorage.removeItem("user");
+      router.replace("/auth/login");
     } catch (error) {
       console.error("Logout Failed: ", error);
       alert("Logout Failed.");
     }
   }
 
-  const menu = [
-    { name: "Home", icon: <Home size={18} />, path: "/" },
-    { name: "My Events", icon: <Calendar size={18} />, path: "/events" },
+  const baseMenu = [{ name: "Home", icon: <Home size={18} />, path: "/" }];
+
+  const organizerMenu = [
+    {
+      name: "My Events",
+      icon: <Calendar size={18} />,
+      path: "/dashboard/events",
+    },
+    {
+      name: "Create Event",
+      icon: <PlusCircle size={18} />,
+      path: "/dashboard/events/create",
+    },
+  ];
+
+  const attendeeMenu = [
+    {
+      name: "My Tickets",
+      icon: <Receipt size={18} />,
+      path: "/dashboard/tickets",
+    },
   ];
 
   const account = [
@@ -33,26 +111,45 @@ export default function DashboardSidebar() {
       path: "/account/info",
     },
     {
+      name: "Transactions",
+      icon: <Receipt size={18} />,
+      path: "/account/transactions",
+    },
+    {
       name: "Settings",
       icon: <Settings size={18} />,
       path: "/account/settings",
     },
   ];
+
+  const menu =
+    role === "ORGANIZER"
+      ? [...baseMenu, ...organizerMenu]
+      : [...baseMenu, ...attendeeMenu];
+
   return (
     <aside
       className="
         fixed top-0 left-0 z-20
         h-screen w-60
         flex flex-col
-        bg-rose-500/10 text-black
-        backdrop-blur-lg shadow-2xl
-        border-r border-white/10
+        bg-gradient-to-b from-rose-100/20 to-purple-100/10 text-black
+        backdrop-blur-lg shadow-2xl border-r border-white/10
       "
     >
-      <div className="px-4 py-5 border-b border-white/10">
-        <h1 className="text-lg font-semibold tracking-wide">Dashboard</h1>
+      <div className="px-4 py-5 border-b border-white/10 flex items-center justify-center">
+        <div className="relative w-[140px] h-[45px] flex items-center justify-center group">
+          <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition duration-500 blur-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400" />
+          <Image
+            src="/Navbar/Eventura.svg"
+            alt="Eventura logo"
+            fill
+            className="object-contain relative z-10"
+          />
+        </div>
       </div>
 
+      {/* Menu */}
       <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
         <div>
           <p className="text-xs uppercase tracking-wider text-black mb-2">
@@ -97,10 +194,27 @@ export default function DashboardSidebar() {
             ))}
           </nav>
         </div>
+
         <div>
           <p className="text-xs uppercase tracking-wider text-black mb-2">
             Mode User
           </p>
+          <button
+            onClick={handleSwitchRole}
+            disabled={loading}
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-blue-400 to-purple-500 text-white font-semibold hover:scale-[1.03] transition disabled:opacity-70"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin text-white" size={18} />
+                <span>Switching Role...</span>
+              </>
+            ) : role === "ATTENDEE" ? (
+              "Change to Organizer Profile"
+            ) : (
+              "Change to Attendee Profile"
+            )}
+          </button>
         </div>
       </div>
 

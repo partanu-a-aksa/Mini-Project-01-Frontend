@@ -15,10 +15,16 @@ export default function LogIn() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       setMessage("Login Succesful.");
       alert("Welcome!");

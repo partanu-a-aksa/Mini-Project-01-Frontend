@@ -4,33 +4,28 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useState } from "react";
-import api from "@/app/lib/api";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 
 export default function Signup() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [roles, setRoles] = useState("ATTENDDEE");
+  const [roles, setRoles] = useState("ATTENDEE");
   const [message, setMessage] = useState("");
 
   async function handleSignup() {
     try {
-      const res = await api.post("/auth/signup", {
+      const res = await axios.post("http://localhost:5000/auth/regis", {
         fullName: name,
         email,
         password,
-        roles: roles.toUpperCase(),
+        role: roles.toUpperCase(),
       });
       setMessage(res.data.message);
       alert("Success!");
 
-      if (res.data.roles === "ORGANIZER") {
-        router.replace("/dashboard");
-      } else {
-        router.replace("/");
-      }
+      router.replace("/login");
     } catch (error: any) {
       setMessage(error.res?.data?.message || "Registration Failed.");
     }
