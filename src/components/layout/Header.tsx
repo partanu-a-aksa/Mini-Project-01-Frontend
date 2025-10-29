@@ -4,22 +4,42 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
+import axios from "axios";
+import { Loader2, SquareUserRound } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+interface IUser {
+  id: string;
+  fullName: string;
+  email: string;
+  role: "ADMIN" | "ATTENDEE" | "ORGANIZER";
+  profilePic?: string | null;
+  points?: number | null;
+}
 
 export default function Header() {
-  const [query, setQuery] = useState("");
-  const [debounced, setDebounced] = useState(query);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const handler = setTimeout(() => setDebounced(query), 400);
-    return () => clearTimeout(handler);
-  }, [query]);
-
-  useEffect(() => {
-    if (debounced.trim() !== "") {
-      console.log("Searching for:", debounced);
-      // nanti bisa fetch API event disini
+    async function fetchUser() {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+          {
+            withCredentials: true,
+          }
+        );
+        setUser(res.data.user);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [debounced]);
+    fetchUser();
+  }, []);
 
   return (
     <header className="bg-red-50 shadow-sm sticky top-0 z-50 backdrop-blur-md">
@@ -34,25 +54,28 @@ export default function Header() {
           />
         </div>
 
-        <div className="relative w-64 hidden md:block">
-          <input
-            type="text"
-            placeholder="Search events..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-300"
-          />
-        </div>
-
         <div className="flex items-center space-x-4">
           <Navbar />
 
-          <Link
-            href="/auth/login"
-            className="relative inline-flex items-center justify-center px-6 py-2 rounded-full text-sm font-medium text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 animate-gradient"
-          >
-            Sign In
-          </Link>
+          {loading ? (
+            <Loader2 className="animate-spin text-gray-500" size={22} />
+          ) : user ? (
+            <Link href={"/dashboard"}>
+              <button
+                className="p-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:scale-105 transition"
+                title={`${user.fullName} (${user.role})`}
+              >
+                <SquareUserRound className="text-white" size={22} />
+              </button>
+            </Link>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="relative inline-flex items-center justify-center px-6 py-2 rounded-full text-sm font-medium text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 animate-gradient"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </header>
