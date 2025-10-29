@@ -16,7 +16,7 @@ export default function Navbar() {
           className="relative px-4 py-2 rounded-2xl text-gray-700 font-medium group transition"
         >
           {link.name}
-          <span className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 blur-md bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 animate-gradient" />
+          <span className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 blur-md bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 animate-gradient " />
         </Link>
       ))}
     </nav>
