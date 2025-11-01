@@ -4,30 +4,50 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 export default function Signup() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [roles, setRoles] = useState("ATTENDEE");
   const [message, setMessage] = useState("");
+  const [referralCode, setReferralCode] = useState("");
 
-  async function handleSignup() {
+  async function handleSignup(e: React.FormEvent) {
+    console.log("1");
+    e.preventDefault();
+
+    // === Frontend validation ===
+    if (password !== confirmPassword) {
+      setMessage("Passwords do not match!");
+      return;
+    }
+
+    if (password.length < 6) {
+      setMessage("Password must be at least 6 characters long!");
+      return;
+    }
+
     try {
-      const res = await axios.post("http://localhost:5000/auth/regis", {
-        fullName: name,
-        email,
-        password,
-        role: roles.toUpperCase(),
-      });
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/regis`,
+        {
+          fullName: name,
+          email,
+          password,
+          role: roles.toUpperCase(),
+          referralCode,
+        }
+      );
+
       setMessage(res.data.message);
       alert("Success!");
-
-      router.replace("/login");
-    } catch (error: any) {
-      setMessage(error.res?.data?.message || "Registration Failed.");
+      router.replace("/auth/login");
+    } catch (error: unknown) {
+      setMessage(error.response?.data?.message || "Registration Failed.");
     }
   }
 
@@ -56,16 +76,15 @@ export default function Signup() {
               height={75}
             />
           </div>
-
           <div className="h-10 w-[2px] bg-black rounded-full opacity-80"></div>
-
           <h2 className="text-[22px] font-extrabold text-purple-400 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             Sign Up
           </h2>
         </div>
 
+        {/* Form utk daftar */}
         <form
-          className="w-full flex flex-col gap-4 z-10"
+          className="w-full flex flex-col gap-2 z-10"
           onSubmit={handleSignup}
         >
           <input
@@ -91,6 +110,23 @@ export default function Signup() {
             className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-violet-400 
               focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
           />
+          <input
+            type="password"
+            placeholder="Confirm Your Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-violet-400 
+              focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
+          />
+          <input
+            type="text"
+            placeholder="Referral Code"
+            value={referralCode}
+            onChange={(e) => setReferralCode(e.target.value)}
+            className="p-3 rounded-xl border border-white/40 bg-white/10 text-slate placeholder-violet-400 
+              focus:border-cyan-400 focus:ring focus:ring-cyan-300/30 outline-none transition"
+          />
+
           <div>
             <label className="block mb-1 text-gray-700">Role</label>
             <select
@@ -103,6 +139,13 @@ export default function Signup() {
               <option value="ORGANIZER">Organizer</option>
             </select>
           </div>
+
+          {message && (
+            <div className="text-center text-sm text-red-400 font-medium">
+              {message}
+            </div>
+          )}
+
           <button
             type="submit"
             className="p-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate font-semibold shadow-lg 
