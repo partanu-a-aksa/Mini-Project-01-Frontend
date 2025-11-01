@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export default function Dashboard() {
   const [role, setRole] = useState("");
@@ -30,7 +31,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-500">
-        <Loader2 className="animate-spin" size={24} />
+        <Loader2 className="animate-spin" size={40} />
         <span className="ml-2">Loading Dashboard...</span>
       </div>
     );
@@ -44,11 +45,12 @@ export default function Dashboard() {
 
       {role === "ORGANIZER" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Organizer widgets */}
-          <DashboardCard
-            title="Event Management"
-            desc="View and manage your events (Add / Edit / Delete)."
-          />
+          <Link href="/dashboard/events">
+            <DashboardCard
+              title="Event Management"
+              desc="View and manage your events (Add / Edit / Delete)."
+            />
+          </Link>
           <DashboardCard
             title="Transaction Management"
             desc="Accept, reject, or view payment proofs from users."
@@ -72,7 +74,6 @@ export default function Dashboard() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Attendee widgets */}
           <DashboardCard
             title="My Tickets"
             desc="View your purchased tickets and check event schedules."
@@ -91,7 +92,13 @@ export default function Dashboard() {
   );
 }
 
-function DashboardCard({ title, desc }: { title: string; desc: string }) {
+export function DashboardCard({
+  title,
+  desc,
+}: {
+  title: string;
+  desc: string;
+}) {
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all">
       <h2 className="text-xl font-semibold mb-2">{title}</h2>
