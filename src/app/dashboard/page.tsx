@@ -78,10 +78,12 @@ export default function Dashboard() {
             title="My Tickets"
             desc="View your purchased tickets and check event schedules."
           />
-          <DashboardCard
-            title="Upcoming Events"
-            desc="Explore events you might like to attend next."
-          />
+          <Link href={"/dashboard/my-events"}>
+            <DashboardCard
+              title="Upcoming Events"
+              desc="Explore events you might like to attend next."
+            />
+          </Link>
           <DashboardCard
             title="Reward Points"
             desc="Track your reward points and referral bonuses."
