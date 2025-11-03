@@ -21,7 +21,7 @@ export default function HeroSection() {
           Get Started
         </Link>
         <Link
-          href="/events"
+          href="/explore"
           className="px-6 py-3 rounded-full border border-purple-400 text-purple-600 font-semibold hover:bg-purple-50 transition-all"
         >
           Explore Events
