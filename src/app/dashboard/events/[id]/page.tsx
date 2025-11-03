@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
+import { ArrowLeftCircle } from "lucide-react";
 
 interface IEvent {
   id: number;
@@ -50,9 +51,10 @@ export default function EventDetail() {
     <div className="p-8">
       <button
         onClick={() => router.back()}
-        className="mb-4 text-blue-600 hover:underline"
+        className="flex items-center gap-2 mb-4 hover:scale-110 transition"
       >
-        ← Back
+        <ArrowLeftCircle className="w-6 h-6" />
+        <span className="hidden sm:inline">Back</span>
       </button>
       <h1 className="text-2xl font-bold mb-4">{event.name}</h1>
       <p className="text-gray-700 mb-3">{event.description}</p>
