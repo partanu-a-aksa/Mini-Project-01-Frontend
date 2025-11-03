@@ -108,7 +108,7 @@ export default function DashboardSidebar() {
     {
       name: "Informasi User",
       icon: <BookUser size={18} />,
-      path: "/account/info",
+      path: "/dashboard/profile",
     },
     {
       name: "Transactions",

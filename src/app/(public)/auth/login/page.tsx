@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export default function LogIn() {
   const router = useRouter();
@@ -33,9 +33,11 @@ export default function LogIn() {
       } else {
         router.replace("/");
       }
-    } catch (error: any) {
-      if (error.response) {
-        setMessage(error.response?.data.message || "Login Failed");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          setMessage(error.response?.data.message || "Login Failed");
+        }
       } else {
         setMessage("Network Error.");
       }
