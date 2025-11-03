@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { motion } from "motion/react";
 
 export default function Dashboard() {
   const [role, setRole] = useState("");
@@ -38,59 +39,66 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="relative min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">
-        {role === "ORGANIZER" ? "Organizer Dashboard" : "Attendee Dashboard"}
-      </h1>
+    <motion.div
+      initial={{ opacity: 0, x: 50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: false, amount: 0.3 }}
+    >
+      <div className="relative min-h-screen p-8">
+        <h1 className="text-3xl font-bold mb-8 text-gray-800">
+          {role === "ORGANIZER" ? "Organizer Dashboard" : "Attendee Dashboard"}
+        </h1>
 
-      {role === "ORGANIZER" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link href="/dashboard/events">
+        {role === "ORGANIZER" ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Link href="/dashboard/events">
+              <DashboardCard
+                title="Event Management"
+                desc="View and manage your events (Add / Edit / Delete)."
+              />
+            </Link>
             <DashboardCard
-              title="Event Management"
-              desc="View and manage your events (Add / Edit / Delete)."
+              title="Transaction Management"
+              desc="Accept, reject, or view payment proofs from users."
             />
-          </Link>
-          <DashboardCard
-            title="Transaction Management"
-            desc="Accept, reject, or view payment proofs from users."
-          />
-          <DashboardCard
-            title="Statistics Overview"
-            desc="View event statistics and performance metrics."
-          />
-          <DashboardCard
-            title="Attendee List"
-            desc="See who is attending your events, with ticket quantity and price paid."
-          />
-          <DashboardCard
-            title="Notification Emails"
-            desc="Email customers when transactions are accepted or rejected."
-          />
-          <DashboardCard
-            title="Seat & Points Restoration"
-            desc="Restore available seats and points for rejected transactions."
-          />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <DashboardCard
-            title="My Tickets"
-            desc="View your purchased tickets and check event schedules."
-          />
-          <Link href={"/dashboard/my-events"}>
             <DashboardCard
-              title="Upcoming Events"
-              desc="Explore events you might like to attend next."
+              title="Statistics Overview"
+              desc="View event statistics and performance metrics."
             />
-          </Link>
-          <DashboardCard
-            title="Reward Points"
-            desc="Track your reward points and referral bonuses."
-          />
-        </div>
-      )}
-    </div>
+            <DashboardCard
+              title="Attendee List"
+              desc="See who is attending your events, with ticket quantity and price paid."
+            />
+            <DashboardCard
+              title="Notification Emails"
+              desc="Email customers when transactions are accepted or rejected."
+            />
+            <DashboardCard
+              title="Seat & Points Restoration"
+              desc="Restore available seats and points for rejected transactions."
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <DashboardCard
+              title="My Tickets"
+              desc="View your purchased tickets and check event schedules."
+            />
+            <Link href={"/dashboard/my-events"}>
+              <DashboardCard
+                title="Upcoming Events"
+                desc="Explore events you might like to attend next."
+              />
+            </Link>
+            <DashboardCard
+              title="Reward Points"
+              desc="Track your reward points and referral bonuses."
+            />
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }
 

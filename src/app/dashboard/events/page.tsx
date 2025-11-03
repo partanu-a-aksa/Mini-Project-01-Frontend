@@ -1,6 +1,7 @@
 "use client";
-import axios from "axios";
+
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { DashboardCard } from "../page";
 
 interface IEvent {
@@ -11,72 +12,87 @@ interface IEvent {
   endDate: string;
 }
 
+interface IUser {
+  id: string;
+  role: string;
+}
+
 export default function Events() {
-  const [role, setRole] = useState("");
+  const [user, setUser] = useState<IUser | null>(null);
   const [events, setEvents] = useState<IEvent[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchDataEvents() {
+    async function fetchOrganizerEvents() {
       try {
-        const [userRes, eventsRes] = await Promise.all([
-          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-            withCredentials: true,
-          }),
-          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/event/all`, {
-            withCredentials: true,
-          }),
-        ]);
+        setLoading(true);
 
-        setRole(userRes.data.user.role);
-        setEvents(eventsRes.data.allEvents);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-        setRole("");
+        const userRes = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+          { withCredentials: true }
+        );
+
+        const currentUser: IUser = userRes.data.user;
+        setUser(currentUser);
+
+        if (currentUser.role !== "ORGANIZER") {
+          setError("Unauthorized: Only organizers can access this page.");
+          return;
+        }
+
+        const eventsRes = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/event/organizer/${currentUser.id}`,
+          { withCredentials: true }
+        );
+
+        setEvents(eventsRes.data.organizerEvents || []);
+      } catch (err) {
+        console.error("Error fetching events:", err);
+        setError("Failed to load events. Please try again later.");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchDataEvents();
+    fetchOrganizerEvents();
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${process.env.NEXT_PUBLIC_API_URL}/event/all`, {
-  //       withCredentials: true,
-  //     })
-  //     .then((res) => {
-  //       console.log("API Response: ", res.data);
-  //       setEvents(res.data.allEvents);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //       setLoading(false);
-  //     });
-  // }, []);
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-gray-600">Loading events...</p>
+      </div>
+    );
 
-  if (loading) return <p>Loading Events...</p>;
-  //   if (!events.length) return <p>No events found.</p>;
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+
+  if (!events.length)
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-gray-500">You haven`t created any events yet.</p>
+      </div>
+    );
 
   return (
     <div className="relative min-h-screen p-8">
-      {role === "ORGANIZER" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((event) => (
-            <DashboardCard
-              key={event.id}
-              title={event.name}
-              desc={`${event.category} | ${new Date(
-                event.startDate
-              ).toLocaleDateString()}`}
-            />
-          ))}
-        </div>
-      ) : (
-        "Unauthorized Access."
-      )}
+      <h1 className="text-2xl font-semibold mb-6">Your Events</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {events.map((event) => (
+          <DashboardCard
+            key={event.id}
+            title={event.name}
+            desc={`${event.category} | ${new Date(
+              event.startDate
+            ).toLocaleDateString()}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

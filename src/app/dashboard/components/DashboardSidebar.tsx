@@ -18,6 +18,7 @@ import Image from "next/image";
 export default function DashboardSidebar() {
   const router = useRouter();
   const [role, setRole] = useState("");
+  const [user, setUser] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function fetchUser() {
@@ -28,10 +29,12 @@ export default function DashboardSidebar() {
           withCredentials: true,
         }
       );
+      setUser(res.data.user.fullName);
       setRole(res.data.user.role);
     } catch (err) {
       console.error(err);
       setRole("");
+      setUser("");
     }
   }
 
@@ -81,7 +84,9 @@ export default function DashboardSidebar() {
     }
   }
 
-  const baseMenu = [{ name: "Home", icon: <Home size={18} />, path: "/" }];
+  const baseMenu = [
+    { name: "Dashboard", icon: <Home size={18} />, path: "/dashboard" },
+  ];
 
   const organizerMenu = [
     {
@@ -137,7 +142,7 @@ export default function DashboardSidebar() {
         backdrop-blur-lg shadow-2xl border-r border-white/10
       "
     >
-      <div className="px-4 py-5 border-b border-white/10 flex items-center justify-center">
+      <div className="px-4 py-5 border-b border-white/10 flex flex-col items-center justify-center">
         <div className="relative w-[140px] h-[45px] flex items-center justify-center group">
           <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition duration-500 blur-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400" />
           <Image
@@ -147,6 +152,16 @@ export default function DashboardSidebar() {
             className="object-contain relative z-10"
           />
         </div>
+        {user ? (
+          <p className="mt-3 text-sm font-medium text-gray-700 text-center mt-2">
+            Welcome,{" "}
+            <span className="font-semibold text-purple-700">{user}</span>
+          </p>
+        ) : (
+          <p className="mt-3 text-sm font-medium text-gray-700 text-center mt-2">
+            Loading..
+          </p>
+        )}
       </div>
 
       {/* Menu */}
