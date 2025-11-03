@@ -80,19 +80,29 @@ export default function Events() {
     );
 
   return (
-    <div className="relative min-h-screen p-8">
-      <h1 className="text-2xl font-semibold mb-6">Your Events</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event) => (
-          <DashboardCard
-            key={event.id}
-            title={event.name}
-            desc={`${event.category} | ${new Date(
-              event.startDate
-            ).toLocaleDateString()}`}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {events.map((event) => (
+        <div key={event.id} className="border rounded-2xl p-4 shadow-sm">
+          <h2 className="text-lg font-semibold mb-2">{event.name}</h2>
+          <p className="text-gray-600 text-sm mb-3">
+            {event.category} | {new Date(event.startDate).toLocaleDateString()}
+          </p>
+          <div className="flex justify-between">
+            <a
+              href={`/dashboard/events/${event.id}`}
+              className="text-blue-600 hover:underline"
+            >
+              View
+            </a>
+            <a
+              href={`/dashboard/events/${event.id}/edit`}
+              className="text-yellow-600 hover:underline"
+            >
+              Edit
+            </a>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
