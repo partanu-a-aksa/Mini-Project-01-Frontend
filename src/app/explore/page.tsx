@@ -12,7 +12,10 @@ export default function ExplorePage() {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
-    const timer = setTimeout(() => setSearch(searchInput), 500);
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+    }, 800);
+
     return () => clearTimeout(timer);
   }, [searchInput]);
 
@@ -30,34 +33,36 @@ export default function ExplorePage() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white w-full sm:w-2/3">
+        {/* Search Bar */}
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white w-full sm:w-2/3 focus-within:ring-2 focus-within:ring-blue-500 transition">
           <Search size={18} className="text-gray-500" />
           <input
             type="text"
-            placeholder="Search events..."
+            placeholder="Search events by name, location..."
             className="w-full outline-none text-sm"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white sm:w-1/3">
+        {/* Category Filter */}
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white sm:w-1/3 focus-within:ring-2 focus-within:ring-blue-500 transition">
           <Filter size={18} className="text-gray-500" />
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full bg-transparent outline-none text-sm"
+            className="w-full bg-transparent outline-none text-sm cursor-pointer"
           >
-            <option value="">All categories</option>
-            <option value="Music">Music</option>
-            <option value="Technology">Technology</option>
-            <option value="Workshop">Workshop</option>
-            <option value="Festival">Festival</option>
+            <option value="">All Categories</option>
+            <option value="FESTIVAL">Festival</option>
+            <option value="MUSIC">Music</option>
+            <option value="ART">Art</option>
+            <option value="EDUCATION">Education</option>
           </select>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto pb-10">
+      <section className="max-w-6xl mx-auto pb-10 px-6">
         <OngoingEvents search={search} category={category} />
       </section>
 
