@@ -7,6 +7,7 @@ import Navbar from "./Navbar";
 import axios from "axios";
 import { Loader2, SquareUserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface IUser {
   id: string;
@@ -19,26 +20,30 @@ interface IUser {
 
 export default function Header() {
   const [user, setUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const token = Cookies.get("token");
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
-          {
-            withCredentials: true,
-          }
-        );
-        setUser(res.data.user);
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
+    if (token) {
+      async function fetchUser() {
+        setLoading(true);
+        try {
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+            {
+              withCredentials: true,
+            }
+          );
+          setUser(res.data.user);
+        } catch {
+          setUser(null);
+        } finally {
+          setLoading(false);
+        }
       }
+      fetchUser();
     }
-    fetchUser();
   }, []);
 
   return (
