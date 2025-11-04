@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Home,
@@ -145,12 +146,14 @@ export default function DashboardSidebar() {
       <div className="px-4 py-5 border-b border-white/10 flex flex-col items-center justify-center">
         <div className="relative w-[140px] h-[45px] flex items-center justify-center group">
           <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition duration-500 blur-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400" />
-          <Image
-            src="/Navbar/Eventura.svg"
-            alt="Eventura logo"
-            fill
-            className="object-contain relative z-10"
-          />
+          <Link href={"/"}>
+            <Image
+              src="/Navbar/Eventura.svg"
+              alt="Eventura logo"
+              fill
+              className="object-contain relative z-10"
+            />
+          </Link>
         </div>
         {user ? (
           <p className="mt-3 text-sm font-medium text-gray-700 text-center mt-2">
