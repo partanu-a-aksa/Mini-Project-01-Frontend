@@ -17,7 +17,7 @@ interface IUser {
   role: string;
 }
 
-export default function Events() {
+export default function OrganizerEvents() {
   const [user, setUser] = useState<IUser | null>(null);
   const [events, setEvents] = useState<IEvent[]>([]);
   const [loading, setLoading] = useState(true);

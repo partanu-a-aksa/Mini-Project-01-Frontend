@@ -41,7 +41,6 @@ export default function ExplorePage() {
           />
         </div>
 
-        {/* Filter Dropdown */}
         <div className="flex items-center gap-2 border rounded-lg px-3 py-2 bg-white sm:w-1/3">
           <Filter size={18} className="text-gray-500" />
           <select
@@ -58,7 +57,6 @@ export default function ExplorePage() {
         </div>
       </section>
 
-      {/* Event List */}
       <section className="max-w-6xl mx-auto pb-10">
         <OngoingEvents search={search} category={category} />
       </section>
