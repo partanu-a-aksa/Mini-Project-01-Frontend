@@ -119,7 +119,7 @@ export default function DashboardSidebar() {
     {
       name: "Transactions",
       icon: <Receipt size={18} />,
-      path: "/account/transactions",
+      path: "/dashboard/my-transaction",
     },
     {
       name: "Settings",

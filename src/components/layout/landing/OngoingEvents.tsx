@@ -29,6 +29,10 @@ export default function OngoingEvents({ search = "", category = "" }: IProps) {
 
   useEffect(() => {
     async function fetchEvents() {
+      if (!process.env.NEXT_PUBLIC_API_URL) {
+        console.error("API URL not found!");
+        return;
+      }
       try {
         setLoading(true);
         const res = await axios.get(

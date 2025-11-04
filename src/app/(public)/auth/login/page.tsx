@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
+import cookies from "js-cookie";
 
 export default function LogIn() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function LogIn() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
@@ -25,6 +27,10 @@ export default function LogIn() {
         }
       );
 
+      cookies.set("token", res.data.token, {
+        sameSite: "strict",
+        path: "/",
+      });
       setMessage("Login Succesful.");
       alert("Welcome!");
 
@@ -34,13 +40,7 @@ export default function LogIn() {
         router.replace("/");
       }
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        if (error.response) {
-          setMessage(error.response?.data.message || "Login Failed");
-        }
-      } else {
-        setMessage("Network Error.");
-      }
+      console.error(error);
     }
   }
 

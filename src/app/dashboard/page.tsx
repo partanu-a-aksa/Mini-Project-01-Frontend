@@ -62,10 +62,12 @@ export default function Dashboard() {
               title="Transaction Management"
               desc="Accept, reject, or view payment proofs from users."
             />
-            <DashboardCard
-              title="Statistics Overview"
-              desc="View event statistics and performance metrics."
-            />
+            <Link href={"/dashboard/statistics"}>
+              <DashboardCard
+                title="Statistics Overview"
+                desc="View event statistics and performance metrics."
+              />
+            </Link>
             <DashboardCard
               title="Attendee List"
               desc="See who is attending your events, with ticket quantity and price paid."
