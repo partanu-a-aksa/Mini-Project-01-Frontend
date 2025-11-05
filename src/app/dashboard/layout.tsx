@@ -9,7 +9,6 @@ export interface IDashboardProps {
 export default function Dashboard({ children }: IDashboardProps) {
   return (
     <div className="min-h-screen w-full relative">
-      {/* === Aurora Dream Soft Harmony Background === */}
       <div
         className="absolute inset-0 z-0"
         style={{

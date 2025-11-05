@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section className="py-20 flex flex-col justify-center items-center text-center px-4 bg-gradient-to-b from-white to-purple-50 text-gray-800">
+    <section className="min-h-screen py-20 flex flex-col justify-center items-center text-center px-4  ">
       <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 mb-4">
         Discover. Create. Experience Events with Eventura.
       </h1>
