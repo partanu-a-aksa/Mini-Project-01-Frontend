@@ -35,10 +35,13 @@ export default function UserTransaction() {
 
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/transaction/upload/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/transaction/${id}/upload-proof`,
         formData,
         {
           withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       alert("Payment proof uploaded successfully!");

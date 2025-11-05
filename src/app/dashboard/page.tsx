@@ -58,10 +58,12 @@ export default function Dashboard() {
                 desc="View and manage your events (Add / Edit / Delete)."
               />
             </Link>
-            <DashboardCard
-              title="Transaction Management"
-              desc="Accept, reject, or view payment proofs from users."
-            />
+            <Link href={"/dashboard/org-transaction"}>
+              <DashboardCard
+                title="Transaction Management"
+                desc="Accept, reject, or view payment proofs from users."
+              />
+            </Link>
             <Link href={"/dashboard/statistics"}>
               <DashboardCard
                 title="Statistics Overview"
