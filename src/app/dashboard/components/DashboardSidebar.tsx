@@ -108,7 +108,7 @@ export default function DashboardSidebar() {
     {
       name: "My Tickets",
       icon: <Receipt size={18} />,
-      path: "/dashboard/tickets",
+      path: "/dashboard/my-tickets",
     },
   ];
 
@@ -142,10 +142,10 @@ export default function DashboardSidebar() {
         h-screen w-60
         flex flex-col
         bg-gradient-to-b from-rose-100/20 to-purple-100/10 text-black
-        backdrop-blur-lg shadow-2xl border-r border-white/10
+        backdrop-blur-lg shadow-2xl border-r border-white/10 
       "
     >
-      <div className="px-4 py-5 border-b border-white/10 flex flex-col items-center justify-center">
+      <div className="px-4 py-5 border-b border-white/10 flex flex-col items-center justify-center ">
         <div className="relative w-[140px] h-[45px] flex items-center justify-center group">
           <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition duration-500 blur-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400" />
           <Link href={"/"}>
@@ -158,7 +158,7 @@ export default function DashboardSidebar() {
           </Link>
         </div>
         {user ? (
-          <p className="mt-3 text-sm font-medium text-gray-700 text-center mt-2">
+          <p className="mt-3 text-sm font-medium text-gray-700 text-center mt-2 hover:scale-105">
             Welcome,{" "}
             <span className="font-semibold text-purple-700">{user}</span>
           </p>
@@ -170,12 +170,12 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Menu */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 ">
         <div>
           <p className="text-xs uppercase tracking-wider text-black mb-2">
             Menu
           </p>
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-col gap-1 ">
             {menu.map((item, i) => (
               <button
                 key={i}
@@ -183,7 +183,7 @@ export default function DashboardSidebar() {
                 className="
                   flex items-center gap-3 w-full px-3 py-2
                   rounded-md text-sm font-medium
-                  hover:bg-white/15 transition-colors
+                  hover:bg-white/15 transition-colors hover:scale-105
                 "
               >
                 {item.icon}
@@ -205,7 +205,7 @@ export default function DashboardSidebar() {
                 className="
                   flex items-center gap-3 w-full px-3 py-2
                   rounded-md text-sm font-medium
-                  hover:bg-white/15 transition-colors
+                  hover:bg-white/15 transition-colors hover:scale-105
                 "
               >
                 {item.icon}
