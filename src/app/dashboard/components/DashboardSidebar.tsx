@@ -15,6 +15,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 export default function DashboardSidebar() {
   const router = useRouter();
@@ -77,6 +78,7 @@ export default function DashboardSidebar() {
           withCredentials: true,
         }
       );
+      Cookies.remove("token");
       localStorage.removeItem("user");
       router.replace("/auth/login");
     } catch (error) {

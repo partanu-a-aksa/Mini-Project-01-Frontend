@@ -23,7 +23,7 @@ export default function ExplorePage() {
     <main className="min-h-screen bg-gray-50">
       <Header />
       <section className="text-center py-14 bg-white shadow-sm">
-        <h1 className="text-3xl font-bold text-gray-800">
+        <h1 className="text-5xl font-bold text-gray-800">
           Explore Awesome Events
         </h1>
         <p className="text-gray-600 mt-2 text-sm sm:text-base max-w-xl mx-auto">

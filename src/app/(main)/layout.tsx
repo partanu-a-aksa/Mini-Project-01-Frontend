@@ -7,12 +7,7 @@ export interface IMainLayoutProps {
 
 export default function MainLayout(props: IMainLayoutProps) {
   return (
-    <div
-      className="min-h-screen flex flex-col bg-cover flex-grow bg-black/40 backdrop-blur-sm "
-      style={{
-        backgroundImage: "url('/login/galaxybg.jpg')",
-      }}
-    >
+    <div className="min-h-screen flex flex-col bg-cover  bg-white/40 backdrop-blur-sm ">
       <Header />
       <main className="flex-grow">{props.children}</main>
       <Footer />

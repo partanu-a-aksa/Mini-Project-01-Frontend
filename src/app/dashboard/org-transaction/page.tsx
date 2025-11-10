@@ -5,7 +5,7 @@ import axios from "axios";
 import { Check, X } from "lucide-react";
 
 type User = {
-  name: string;
+  fullName: string;
   email: string;
 };
 
@@ -32,12 +32,16 @@ export default function OrganizerTransactions() {
     const fetchTransactions = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/transaction/pending`
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/transaction/pending`,
+          { credentials: "include" }
         );
-        setTransactions(res.data);
+        const json = await res.json();
+        console.log(json);
+        setTransactions(json);
       } catch (err) {
-        console.error("Error fetching transactions:", err);
+        console.log("gagal fetch");
+        console.error("Error fetching:", err);
       } finally {
         setLoading(false);
       }
@@ -51,7 +55,11 @@ export default function OrganizerTransactions() {
     try {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/transaction/${id}/status`,
-        { status }
+        { status },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
 
       // Refresh list
@@ -103,7 +111,7 @@ export default function OrganizerTransactions() {
               <tr key={tx.id} className="border-t hover:bg-gray-50">
                 <td className="p-3 border">{tx.event.name}</td>
                 <td className="p-3 border">
-                  <div className="font-medium">{tx.user.name}</div>
+                  <div className="font-medium">{tx.user.fullName}</div>
                   <div className="text-xs text-gray-500">{tx.user.email}</div>
                 </td>
                 <td className="p-3 border text-center">{tx.ticketQuantity}</td>
