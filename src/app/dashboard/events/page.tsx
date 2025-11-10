@@ -82,7 +82,10 @@ export default function OrganizerEvents() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {events.map((event) => (
-        <div key={event.id} className="border rounded-2xl p-4 shadow-sm">
+        <div
+          key={event.id}
+          className="border rounded-2xl p-4 shadow-sm bg-white"
+        >
           <h2 className="text-lg font-semibold mb-2">{event.name}</h2>
           <p className="text-gray-600 text-sm mb-3">
             {event.category} | {new Date(event.startDate).toLocaleDateString()}

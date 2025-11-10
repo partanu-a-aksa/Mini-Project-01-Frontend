@@ -65,7 +65,7 @@ export default function UserTransaction() {
         {transactions.map((tx) => (
           <div
             key={tx.id}
-            className="border p-4 rounded flex justify-between items-center"
+            className="border p-4 rounded flex justify-between items-center bg-white"
           >
             <div>
               <h2 className="font-semibold">{tx.event.name}</h2>
@@ -78,7 +78,7 @@ export default function UserTransaction() {
             </div>
 
             {tx.status === "WAITING_FOR_PAYMENT" ? (
-              <label className="flex items-center gap-2 cursor-pointer bg-blue-600 text-white px-3 py-1 rounded">
+              <label className="flex items-center gap-2 cursor-pointer bg-blue-600 text-white px-3 py-1 rounded hover:scale-105">
                 {uploadingId === tx.id ? (
                   <>
                     <Loader2 className="animate-spin" size={16} /> Uploading...

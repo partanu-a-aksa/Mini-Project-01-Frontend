@@ -19,14 +19,31 @@ interface IEvent {
   };
 }
 
+interface IPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 interface IProps {
   search?: string;
   category?: string;
+  page?: number;
+  limit?: number;
+  onPaginationChange?: (totalPages: number) => void;
 }
 
-export default function OngoingEvents({ search = "", category = "" }: IProps) {
+export default function OngoingEvents({
+  search = "",
+  category = "",
+  page = 1,
+  limit = 3,
+  onPaginationChange,
+}: IProps) {
   const [events, setEvents] = useState<IEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState<IPagination | null>(null);
 
   useEffect(() => {
     async function fetchEvents() {
@@ -39,10 +56,22 @@ export default function OngoingEvents({ search = "", category = "" }: IProps) {
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/event/ongoing`,
           {
-            params: { search, category },
+            params: {
+              search,
+              category,
+              page,
+              limit,
+            },
           }
         );
         setEvents(res.data.data || []);
+        const paginationData = res.data.pagination || null;
+        setPagination(paginationData);
+
+        // Notify parent component about total pages
+        if (onPaginationChange && paginationData) {
+          onPaginationChange(paginationData.totalPages);
+        }
       } catch (error) {
         console.error("Error fetching events:", error);
       } finally {
@@ -50,13 +79,13 @@ export default function OngoingEvents({ search = "", category = "" }: IProps) {
       }
     }
     fetchEvents();
-  }, [search, category]);
+  }, [search, category, page, limit, onPaginationChange]);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center py-16">
         <Loader2 className="animate-spin text-gray-500" size={28} />
-        <p className="ml-3 text-gray-500">Loading event...</p>
+        <p className="ml-3 text-gray-500">Loading events...</p>
       </div>
     );
   }
@@ -64,21 +93,28 @@ export default function OngoingEvents({ search = "", category = "" }: IProps) {
   if (events.length === 0) {
     return (
       <div className="text-center py-16 text-gray-600">
-        <p>No event currently ongoing.</p>
+        <p>No events found matching your criteria.</p>
       </div>
     );
   }
 
   return (
-    <div className="px-6 py-10">
-      <h2 className="text-5xl font-bold text-center mb-8">Ongoing Events</h2>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {pagination && (
+        <div className="mb-6 text-center text-sm text-gray-600">
+          Showing {(pagination.page - 1) * pagination.limit + 1}-
+          {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
+          {pagination.total} events
+        </div>
+      )}
+
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.0 }}
-        viewport={{ once: false, amount: 0.3 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        key={page}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {events.map((event) => (
             <div
               key={event.id}
