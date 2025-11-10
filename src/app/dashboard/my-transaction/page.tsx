@@ -100,7 +100,7 @@ export default function UserTransaction() {
               </label>
             ) : tx.paymentProof ? (
               <a
-                href={`${process.env.NEXT_PUBLIC_API_URL}/${tx.paymentProof}`}
+                href={`${tx.paymentProof}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 text-sm underline"
