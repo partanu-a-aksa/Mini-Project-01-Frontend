@@ -45,7 +45,7 @@ export default function Dashboard() {
       transition={{ duration: 0.8 }}
       viewport={{ once: false, amount: 0.3 }}
     >
-      <div className="relative min-h-screen p-8">
+      <div className="relative min-h-screen p-8 ">
         <h1 className="text-3xl font-bold mb-8 text-gray-800">
           {role === "ORGANIZER" ? "Organizer Dashboard" : "Attendee Dashboard"}
         </h1>
@@ -85,10 +85,12 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <DashboardCard
-              title="My Tickets"
-              desc="View your purchased tickets and check event schedules."
-            />
+            <Link href={"/dashboard/my-tickets"}>
+              <DashboardCard
+                title="My Tickets"
+                desc="View your purchased tickets and check event schedules."
+              />
+            </Link>
             <Link href={"/dashboard/my-events"}>
               <DashboardCard
                 title="Upcoming Events"
